@@ -27,7 +27,7 @@
             <button class="menu-btn" onclick="openPage('goals-view')">
                 <span class="icon">🎯</span><span class="text">Today's Goals</span>
             </button>
-            <button class="menu-btn" onclick="openPage('vision-view')">
+            <button class="menu-btn" onclick="openPage('vision-menu')">
                 <span class="icon">✨</span><span class="text">The Vision</span>
             </button>
         </div>
@@ -55,11 +55,7 @@
         </div>
         <div id="timetable-display" class="glass-card">
             <div class="day-tabs">
-                <button class="day-btn" onclick="viewDay(1)">Mon</button>
-                <button class="day-btn" onclick="viewDay(2)">Tue</button>
-                <button class="day-btn" onclick="viewDay(3)">Wed</button>
-                <button class="day-btn" onclick="viewDay(4)">Thu</button>
-                <button class="day-btn" onclick="viewDay(5)">Fri</button>
+                <button class="day-btn" onclick="viewDay(1)">Mon</button><button class="day-btn" onclick="viewDay(2)">Tue</button><button class="day-btn" onclick="viewDay(3)">Wed</button><button class="day-btn" onclick="viewDay(4)">Thu</button><button class="day-btn" onclick="viewDay(5)">Fri</button>
             </div>
             <h3 id="current-day-label" style="text-align:center; margin-top: 15px; color: white;">Monday</h3>
             <div id="class-list-container"></div>
@@ -88,20 +84,14 @@
                 <p class="prediction">Next expected: <span id="next-period-display">--</span></p>
             </div>
             <div class="cycle-timeline">
-                <div class="phase-bar period-bar" id="bar-period"></div>
-                <div class="phase-bar follicular-bar" id="bar-follicular"></div>
-                <div class="phase-bar ovulation-bar" id="bar-ovulation"></div>
-                <div class="phase-bar luteal-bar" id="bar-luteal"></div>
+                <div class="phase-bar period-bar" id="bar-period"></div><div class="phase-bar follicular-bar" id="bar-follicular"></div><div class="phase-bar ovulation-bar" id="bar-ovulation"></div><div class="phase-bar luteal-bar" id="bar-luteal"></div>
             </div>
             <div class="timeline-labels">
                 <span>Period</span><span>Follicular</span><span>Ovulation</span><span>Luteal</span>
             </div>
             <h3 style="margin-top: 25px; font-size: 1rem; color: white;">How are you feeling today?</h3>
             <div class="symptom-grid">
-                <button class="vibe-btn" onclick="logVibe('Cramps 🩸')">🩸 Cramps</button>
-                <button class="vibe-btn" onclick="logVibe('Tired 🥱')">🥱 Tired</button>
-                <button class="vibe-btn" onclick="logVibe('Happy ✨')">✨ Happy</button>
-                <button class="vibe-btn" onclick="logVibe('Cozy ☕')">☕ Cozy</button>
+                <button class="vibe-btn" onclick="logVibe('Cramps 🩸')">🩸 Cramps</button><button class="vibe-btn" onclick="logVibe('Tired 🥱')">🥱 Tired</button><button class="vibe-btn" onclick="logVibe('Happy ✨')">✨ Happy</button><button class="vibe-btn" onclick="logVibe('Cozy ☕')">☕ Cozy</button>
             </div>
             <p id="vibe-log" style="margin-top: 15px; font-size: 0.95rem; font-weight: 600; color: #fff; text-align: center;"></p>
         </div>
@@ -110,9 +100,7 @@
     <div id="goals-view" class="app-view hidden">
         <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
         <h2>Today's Goals 🎯</h2>
-        
         <div id="special-greeting" class="special-greeting"></div>
-
         <div class="glass-card">
             <ul id="goal-list"></ul>
             <div class="add-goal-container">
@@ -121,13 +109,91 @@
             </div>
         </div>
     </div>
-    
     <div id="cute-popup" class="cute-popup hidden"></div>
 
-    <div id="vision-view" class="app-view hidden">
+    <div id="vision-menu" class="app-view hidden">
         <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
-        <h2>The Vision Board</h2>
-        <p>Jabalpur countdown and photos coming in Stage 5...</p>
+        <h2>The Vision 🌏</h2>
+
+        <div class="glass-card countdown-hero">
+            <h3>Time until Jabalpur</h3>
+            <div class="countdown-grid">
+                <div class="time-box"><span id="cd-days">00</span><small>Days</small></div>
+                <div class="time-box"><span id="cd-hours">00</span><small>Hrs</small></div>
+                <div class="time-box"><span id="cd-min">00</span><small>Min</small></div>
+                <div class="time-box"><span id="cd-sec">00</span><small>Sec</small></div>
+            </div>
+            <p class="countdown-date">June 21, 2026 ❤️</p>
+        </div>
+
+        <div class="menu-grid" style="margin-top: 20px;">
+            <button class="menu-btn" onclick="openPage('bucket-view')">
+                <span class="icon">📝</span><span class="text">Our Promises</span>
+            </button>
+            <button class="menu-btn" onclick="openPage('letters-view')">
+                <span class="icon">💌</span><span class="text">Open When...</span>
+            </button>
+            <button class="menu-btn" onclick="openPage('polaroid-view')">
+                <span class="icon">📸</span><span class="text">Memories</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="bucket-view" class="app-view hidden">
+        <button class="back-btn" onclick="openPage('vision-menu')">🔙 Back</button>
+        <h2>Our Promises 📝</h2>
+        <div class="glass-card">
+            <ul id="bucket-list"></ul>
+            <div class="add-goal-container">
+                <input type="text" id="new-bucket" placeholder="Add a dream...">
+                <button class="add-goal-btn" onclick="addBucket()">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="letters-view" class="app-view hidden">
+        <button class="back-btn" onclick="openPage('vision-menu')">🔙 Back</button>
+        <h2>Open When... 💌</h2>
+        <div class="menu-grid">
+            <button class="menu-btn letter-btn" onclick="openLetter('miss')">
+                <span class="icon">🥺</span><span class="text">You miss me</span>
+            </button>
+            <button class="menu-btn letter-btn" onclick="openLetter('sad')">
+                <span class="icon">😢</span><span class="text">You are sad</span>
+            </button>
+            <button class="menu-btn letter-btn" onclick="openLetter('mad')">
+                <span class="icon">😠</span><span class="text">You are mad at me</span>
+            </button>
+             <button class="menu-btn letter-btn" onclick="openLetter('happy')">
+                <span class="icon">🥰</span><span class="text">You are happy</span>
+            </button>
+        </div>
+    </div>
+    <div id="letter-modal" class="modal hidden">
+        <div class="modal-content glass-card">
+            <h3 id="letter-title">Title</h3>
+            <p id="letter-body">Message...</p>
+            <button class="action-btn" onclick="closeLetter()">Close Letter</button>
+        </div>
+    </div>
+
+    <div id="polaroid-view" class="app-view hidden">
+        <button class="back-btn" onclick="openPage('vision-menu')">🔙 Back</button>
+        <h2>Memories 📸</h2>
+        <div class="polaroid-grid">
+            <div class="polaroid">
+                <div class="photo" style="background-image: url('https://placehold.co/600x600/ffb3c6/white?text=Us+Soon');"></div>
+                <p>Soon in Jabalpur ❤️</p>
+            </div>
+             <div class="polaroid">
+                <div class="photo" style="background-image: url('https://placehold.co/600x600/a18cd1/white?text=Cute+Moment');"></div>
+                <p>The day we met</p>
+            </div>
+            <div class="polaroid">
+                <div class="photo" style="background-image: url('https://placehold.co/600x600/ff9a9e/white?text=Video+Call');"></div>
+                <p>Late night calls</p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
