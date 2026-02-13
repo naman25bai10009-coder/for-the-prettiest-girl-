@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ashmita's Hub</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="home-view" class="app-view active">
+        <div class="header">
+            <h1 id="greeting">Hi, Ashmita. ❤️</h1>
+            <p>What do you want to look at?</p>
+        </div>
+        
+        <div class="menu-grid">
+            <button class="menu-btn" onclick="openPage('timetable-view')">
+                <span class="icon">📚</span><span class="text">Class Timetable</span>
+            </button>
+            <button class="menu-btn" onclick="openPage('cycle-view')">
+                <span class="icon">🌸</span><span class="text">Cycle & Vibe</span>
+            </button>
+            <button class="menu-btn" onclick="openPage('goals-view')">
+                <span class="icon">🎯</span><span class="text">Today's Goals</span>
+            </button>
+            <button class="menu-btn" onclick="openPage('vision-view')">
+                <span class="icon">✨</span><span class="text">The Vision</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="timetable-view" class="app-view hidden">
+        <div class="view-header">
+            <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
+            <button class="edit-btn" onclick="toggleTimetableSetup()">⚙️ Edit</button>
+        </div>
+        <h2>Class Timetable</h2>
+        <div id="timetable-setup" class="glass-card hidden">
+            <h3>Add a Class</h3>
+            <select id="day-select">
+                <option value="1">Monday</option><option value="2">Tuesday</option>
+                <option value="3">Wednesday</option><option value="4">Thursday</option>
+                <option value="5">Friday</option><option value="6">Saturday</option>
+            </select>
+            <input type="text" id="class-name" placeholder="Class Name (e.g. Microeconomics)">
+            <div class="time-inputs">
+                <div><label>Start Time</label><input type="time" id="start-time"></div>
+                <div><label>End Time</label><input type="time" id="end-time"></div>
+            </div>
+            <button class="action-btn" onclick="addClass()">+ Add to Schedule</button>
+        </div>
+        <div id="timetable-display" class="glass-card">
+            <div class="day-tabs">
+                <button class="day-btn" onclick="viewDay(1)">Mon</button>
+                <button class="day-btn" onclick="viewDay(2)">Tue</button>
+                <button class="day-btn" onclick="viewDay(3)">Wed</button>
+                <button class="day-btn" onclick="viewDay(4)">Thu</button>
+                <button class="day-btn" onclick="viewDay(5)">Fri</button>
+            </div>
+            <h3 id="current-day-label" style="text-align:center; margin-top: 15px; color: white;">Monday</h3>
+            <div id="class-list-container"></div>
+        </div>
+    </div>
+
+    <div id="cycle-view" class="app-view hidden">
+        <div class="view-header">
+            <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
+            <button class="edit-btn" onclick="toggleCycleSetup()">⚙️ Edit</button>
+        </div>
+        <h2>Cycle & Vibe Tracker 🌸</h2>
+        <div id="cycle-setup" class="glass-card hidden">
+            <h3>Cycle Settings</h3>
+            <label>Last Period Start Date</label><input type="date" id="last-period-date">
+            <div class="time-inputs">
+                <div><label>Cycle Length</label><input type="number" id="cycle-length" value="28"></div>
+                <div><label>Period Length</label><input type="number" id="period-length" value="5"></div>
+            </div>
+            <button class="action-btn" onclick="saveCycleData()">Save Settings</button>
+        </div>
+        <div id="cycle-display" class="glass-card">
+            <div class="cycle-status">
+                <h3 id="cycle-day-display">Day --</h3>
+                <p id="cycle-phase-display">Awaiting data...</p>
+                <p class="prediction">Next expected: <span id="next-period-display">--</span></p>
+            </div>
+            <div class="cycle-timeline">
+                <div class="phase-bar period-bar" id="bar-period"></div>
+                <div class="phase-bar follicular-bar" id="bar-follicular"></div>
+                <div class="phase-bar ovulation-bar" id="bar-ovulation"></div>
+                <div class="phase-bar luteal-bar" id="bar-luteal"></div>
+            </div>
+            <div class="timeline-labels">
+                <span>Period</span><span>Follicular</span><span>Ovulation</span><span>Luteal</span>
+            </div>
+            <h3 style="margin-top: 25px; font-size: 1rem; color: white;">How are you feeling today?</h3>
+            <div class="symptom-grid">
+                <button class="vibe-btn" onclick="logVibe('Cramps 🩸')">🩸 Cramps</button>
+                <button class="vibe-btn" onclick="logVibe('Tired 🥱')">🥱 Tired</button>
+                <button class="vibe-btn" onclick="logVibe('Happy ✨')">✨ Happy</button>
+                <button class="vibe-btn" onclick="logVibe('Cozy ☕')">☕ Cozy</button>
+            </div>
+            <p id="vibe-log" style="margin-top: 15px; font-size: 0.95rem; font-weight: 600; color: #fff; text-align: center;"></p>
+        </div>
+    </div>
+
+    <div id="goals-view" class="app-view hidden">
+        <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
+        <h2>Today's Goals 🎯</h2>
+        
+        <div id="special-greeting" class="special-greeting"></div>
+
+        <div class="glass-card">
+            <ul id="goal-list"></ul>
+            <div class="add-goal-container">
+                <input type="text" id="new-goal" placeholder="Add a sweet goal...">
+                <button class="add-goal-btn" onclick="addGoal()">+</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="cute-popup" class="cute-popup hidden"></div>
+
+    <div id="vision-view" class="app-view hidden">
+        <button class="back-btn" onclick="openPage('home-view')">🔙 Back</button>
+        <h2>The Vision Board</h2>
+        <p>Jabalpur countdown and photos coming in Stage 5...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

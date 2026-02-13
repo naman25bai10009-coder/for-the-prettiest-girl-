@@ -1,0 +1,20 @@
+{
+  "name": "Ashmita's Hub",
+  "short_name": "Ashmita",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ff9a9e",
+  "theme_color": "#ff9a9e",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/ff758c/ffffff?text=A",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512/ff758c/ffffff?text=A",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
