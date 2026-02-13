@@ -3,35 +3,35 @@ let currentViewDay = new Date().getDay();
 if(currentViewDay === 0) currentViewDay = 1; 
 let cycleData = JSON.parse(localStorage.getItem('ashmita_cycle')) || { startDate: '', cycleLength: 28, periodLength: 5, lastVibe: '', lastVibeDate: '' };
 let goals = JSON.parse(localStorage.getItem('ashmita_goals')) || [];
+let bucketList = JSON.parse(localStorage.getItem('ashmita_bucket')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Greeting
     const hour = new Date().getHours();
     const greetingElement = document.getElementById('greeting');
     if (hour < 12) greetingElement.innerText = "Good morning, Ashmita. ☀️";
     else if (hour < 18) greetingElement.innerText = "Good afternoon, Ashmita. 🌸";
     else greetingElement.innerText = "Good evening, Ashmita. 🌙";
 
-    const isScheduleEmpty = Object.values(schedule).every(day => day.length === 0);
-    if (isScheduleEmpty) { document.getElementById('timetable-setup').classList.remove('hidden'); }
+    // Init Logic
+    if (Object.values(schedule).every(day => day.length === 0)) { document.getElementById('timetable-setup').classList.remove('hidden'); }
     viewDay(currentViewDay);
     setInterval(checkLiveClasses, 60000); 
-
     updateCycleDisplay();
-    
-    // Stage 4 Boots
     checkSpecialDays();
     renderGoals();
+    renderBucket();
+    startCountdown(); // Start the Jabalpur timer
 });
 
+// ROUTING
 function openPage(pageId) {
-    const views = document.querySelectorAll('.app-view');
-    views.forEach(view => {
+    document.querySelectorAll('.app-view').forEach(view => {
         view.classList.remove('active');
         view.classList.add('hidden');
     });
-    const activeView = document.getElementById(pageId);
-    activeView.classList.remove('hidden');
-    activeView.classList.add('active');
+    document.getElementById(pageId).classList.remove('hidden');
+    document.getElementById(pageId).classList.add('active');
     window.scrollTo(0, 0);
 }
 
@@ -70,15 +70,14 @@ function checkLiveClasses() {
     const now = new Date(); const today = now.getDay();
     if (currentViewDay != today) return; 
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const rows = document.querySelectorAll('.class-row');
-    rows.forEach(row => {
+    document.querySelectorAll('.class-row').forEach(row => {
         const startArr = row.getAttribute('data-start').split(':'); const endArr = row.getAttribute('data-end').split(':');
         const startMinutes = parseInt(startArr[0]) * 60 + parseInt(startArr[1]); const endMinutes = parseInt(endArr[0]) * 60 + parseInt(endArr[1]);
         if (currentMinutes >= startMinutes && currentMinutes <= endMinutes) { row.classList.add('live-now'); } else { row.classList.remove('live-now'); }
     });
 }
 
-// CYCLE TRACKER
+// CYCLE
 function toggleCycleSetup() {
     const setupDiv = document.getElementById('cycle-setup'); setupDiv.classList.toggle('hidden');
     if (!setupDiv.classList.contains('hidden') && cycleData.startDate) {
@@ -115,99 +114,93 @@ function logVibe(vibe) {
     document.getElementById('vibe-log').innerText = `Current Vibe: ${vibe}`;
 }
 
-// ==========================================
-// STAGE 4: TODAY'S GOALS LOGIC (NEW!)
-// ==========================================
+// GOALS & BUCKET LIST
 function checkSpecialDays() {
     const today = new Date();
     const date = today.getDate();
-    const month = today.getMonth() + 1; // JS months are 0-11
-    
+    const month = today.getMonth() + 1; 
     let greeting = "";
-
-    // The Logic for the special days
-    if (month === 2 && date === 14) {
-        greeting = "Happy Valentine's Day Bachaaa! 💘💖";
-    } else if (month === 3 && date === 3) { // March 3rd Holi 2026
-        greeting = "Happy Holi Sweetie! 🎨✨";
-    } else if (date === 21) {
-        greeting = "Happy Anniversary Monthly Cutu! 🥰💖";
-    }
-    
+    if (month === 2 && date === 14) greeting = "Happy Valentine's Day Baby! 💘💖";
+    else if (month === 3 && date === 3) greeting = "Happy Holi Sweetie! 🎨✨";
+    else if (date === 21) greeting = "Happy Anniversary Monthly Cutu! 🥰💖";
     const greetEl = document.getElementById('special-greeting');
-    if (greeting) {
-        greetEl.innerText = greeting;
-        greetEl.style.display = 'block';
-    } else {
-        greetEl.style.display = 'none';
-    }
+    if (greeting) { greetEl.innerText = greeting; greetEl.style.display = 'block'; } else { greetEl.style.display = 'none'; }
 }
 
 function renderGoals() {
-    const list = document.getElementById('goal-list');
-    list.innerHTML = '';
+    const list = document.getElementById('goal-list'); list.innerHTML = '';
     goals.forEach((goal, index) => {
-        const li = document.createElement('li');
-        li.className = `goal-item ${goal.done ? 'completed' : ''}`;
-        li.innerHTML = `
-            <input type="checkbox" class="custom-checkbox" ${goal.done ? 'checked' : ''} onchange="toggleGoal(${index})">
-            <span>${goal.text}</span>
-            <button class="delete-btn" style="margin-left:auto; margin-top:0;" onclick="deleteGoal(${index})">✖</button>
-        `;
+        const li = document.createElement('li'); li.className = `goal-item ${goal.done ? 'completed' : ''}`;
+        li.innerHTML = `<input type="checkbox" class="custom-checkbox" ${goal.done ? 'checked' : ''} onchange="toggleGoal(${index})"><span>${goal.text}</span><button class="delete-btn" style="margin-left:auto; margin-top:0;" onclick="deleteGoal(${index})">✖</button>`;
         list.appendChild(li);
     });
 }
-
-function addGoal() {
-    const input = document.getElementById('new-goal');
-    const val = input.value.trim();
-    if(!val) return;
-    
-    goals.push({ text: val, done: false });
-    localStorage.setItem('ashmita_goals', JSON.stringify(goals));
-    input.value = '';
-    renderGoals();
-}
-
-function toggleGoal(index) {
-    goals[index].done = !goals[index].done;
-    localStorage.setItem('ashmita_goals', JSON.stringify(goals));
-    renderGoals();
-    
-    // Trigger the cute pop-up only if checking it ON
-    if(goals[index].done) {
-        showCutePopup();
-    }
-}
-
-function deleteGoal(index) {
-    goals.splice(index, 1);
-    localStorage.setItem('ashmita_goals', JSON.stringify(goals));
-    renderGoals();
-}
-
+function addGoal() { const val = document.getElementById('new-goal').value.trim(); if(!val) return; goals.push({ text: val, done: false }); localStorage.setItem('ashmita_goals', JSON.stringify(goals)); document.getElementById('new-goal').value = ''; renderGoals(); }
+function toggleGoal(index) { goals[index].done = !goals[index].done; localStorage.setItem('ashmita_goals', JSON.stringify(goals)); renderGoals(); if(goals[index].done) showCutePopup(); }
+function deleteGoal(index) { goals.splice(index, 1); localStorage.setItem('ashmita_goals', JSON.stringify(goals)); renderGoals(); }
 function showCutePopup() {
-    const popups = [
-        '🐶 Good job cutie!', 
-        '🐱 So proud of you bitchhh!', 
-        '🐾 Yayyy baby!', 
-        '💖 You did it sweetie Pyaruu kuchi puchiii!',
-        '✨ Look at you go!',"APP TOH CUTIE HO","DAIYUM GURLLL!"
-
-    ];
-    
+    const popups = ['🐶 Good job cutie!', '🐱 So proud of you!', '🐾 Yayyy baby!', '💖 You did it sweetie!', '✨ Look at you go!'];
     const popupEl = document.getElementById('cute-popup');
-    // Pick a random cute message
     popupEl.innerText = popups[Math.floor(Math.random() * popups.length)];
+    popupEl.classList.remove('hidden'); popupEl.style.animation = 'none'; void popupEl.offsetWidth; popupEl.style.animation = 'floatUp 2.5s ease forwards';
+    setTimeout(() => { popupEl.classList.add('hidden'); }, 2500);
+}
+
+// BUCKET LIST FUNCTIONS
+function renderBucket() {
+    const list = document.getElementById('bucket-list'); list.innerHTML = '';
+    bucketList.forEach((item, index) => {
+        const li = document.createElement('li'); li.className = `goal-item ${item.done ? 'completed' : ''}`;
+        li.innerHTML = `<input type="checkbox" class="custom-checkbox" ${item.done ? 'checked' : ''} onchange="toggleBucket(${index})"><span>${item.text}</span><button class="delete-btn" style="margin-left:auto; margin-top:0;" onclick="deleteBucket(${index})">✖</button>`;
+        list.appendChild(li);
+    });
+}
+function addBucket() { const val = document.getElementById('new-bucket').value.trim(); if(!val) return; bucketList.push({ text: val, done: false }); localStorage.setItem('ashmita_bucket', JSON.stringify(bucketList)); document.getElementById('new-bucket').value = ''; renderBucket(); }
+function toggleBucket(index) { bucketList[index].done = !bucketList[index].done; localStorage.setItem('ashmita_bucket', JSON.stringify(bucketList)); renderBucket(); if(bucketList[index].done) showCutePopup(); }
+function deleteBucket(index) { bucketList.splice(index, 1); localStorage.setItem('ashmita_bucket', JSON.stringify(bucketList)); renderBucket(); }
+
+// COUNTDOWN TIMER
+function startCountdown() {
+    const targetDate = new Date("June 21, 2026 00:00:00").getTime();
+    setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById("cd-days").innerText = days;
+        document.getElementById("cd-hours").innerText = hours;
+        document.getElementById("cd-min").innerText = minutes;
+        document.getElementById("cd-sec").innerText = seconds;
+    }, 1000);
+}
+
+// OPEN WHEN LETTERS
+function openLetter(type) {
+    const modal = document.getElementById('letter-modal');
+    const title = document.getElementById('letter-title');
+    const body = document.getElementById('letter-body');
     
-    // Restart animation trick
-    popupEl.classList.remove('hidden');
-    popupEl.style.animation = 'none';
-    void popupEl.offsetWidth; // Trigger reflow
-    popupEl.style.animation = 'floatUp 2.5s ease forwards';
+    // CUSTOM MESSAGES - EDIT THESE!
+    if (type === 'miss') {
+        title.innerText = "When you miss me... 🥺";
+        body.innerText = "Remember that I am just one call away. Close your eyes and imagine I'm holding your hand. This distance is temporary, but what we have is forever. I love you more than miles can ever separate us.";
+    } else if (type === 'sad') {
+        title.innerText = "When you are sad... 😢";
+        body.innerText = "It's okay to not be okay sometimes. Take a deep breath. Drink some water. Put on your favorite song. I am sending you the biggest, warmest virtual hug right now. You are strong, and you will get through this.";
+    } else if (type === 'mad') {
+        title.innerText = "When you are mad at me... 😠";
+        body.innerText = "I'm sorry. I probably did something stupid. Please forgive me? I hate fighting with you. Let's talk it out when you're ready. You mean the world to me.";
+    } else if (type === 'happy') {
+        title.innerText = "When you are happy... 🥰";
+        body.innerText = "Seeing you happy makes my entire day! Keep that beautiful smile on your face. You deserve all the joy in the world. I wish I was there to celebrate with you!";
+    }
     
-    // Hide after animation finishes
-    setTimeout(() => { 
-        popupEl.classList.add('hidden'); 
-    }, 2500);
+    modal.classList.remove('hidden');
+}
+
+function closeLetter() {
+    document.getElementById('letter-modal').classList.add('hidden');
 }
