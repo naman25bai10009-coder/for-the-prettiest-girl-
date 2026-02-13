@@ -6,12 +6,12 @@ let goals = JSON.parse(localStorage.getItem('ashmita_goals')) || [];
 let bucketList = JSON.parse(localStorage.getItem('ashmita_bucket')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Greeting
+    // PERSONALIZED GREETING
     const hour = new Date().getHours();
     const greetingElement = document.getElementById('greeting');
-    if (hour < 12) greetingElement.innerText = "Good morning, Ashmita. ☀️";
-    else if (hour < 18) greetingElement.innerText = "Good afternoon, Ashmita. 🌸";
-    else greetingElement.innerText = "Good evening, Ashmita. 🌙";
+    if (hour < 12) greetingElement.innerText = "Good morninggg meri jaan. ☀️";
+    else if (hour < 18) greetingElement.innerText = "Good afternoonnn cutu. 🌸";
+    else greetingElement.innerText = "Good eveninggg baunitaa. 🌙";
 
     // Init Logic
     if (Object.values(schedule).every(day => day.length === 0)) { document.getElementById('timetable-setup').classList.remove('hidden'); }
@@ -120,9 +120,12 @@ function checkSpecialDays() {
     const date = today.getDate();
     const month = today.getMonth() + 1; 
     let greeting = "";
-    if (month === 2 && date === 14) greeting = "Happy Valentine's Day Baby! 💘💖";
-    else if (month === 3 && date === 3) greeting = "Happy Holi Sweetie! 🎨✨";
-    else if (date === 21) greeting = "Happy Anniversary Monthly Cutu! 🥰💖";
+    
+    // CUSTOM SPECIAL DAY MESSAGES
+    if (month === 2 && date === 14) greeting = "Happy Valentine's Day Babyyy! 💘💖";
+    else if (month === 3 && date === 3) greeting = "Happy Holi Sweetieee! Rang mat lagwana zyada! 🎨✨";
+    else if (date === 21) greeting = "Happy Anniversary Monthly Cutuuu! I love youuu! 🥰💖";
+    
     const greetEl = document.getElementById('special-greeting');
     if (greeting) { greetEl.innerText = greeting; greetEl.style.display = 'block'; } else { greetEl.style.display = 'none'; }
 }
@@ -138,8 +141,17 @@ function renderGoals() {
 function addGoal() { const val = document.getElementById('new-goal').value.trim(); if(!val) return; goals.push({ text: val, done: false }); localStorage.setItem('ashmita_goals', JSON.stringify(goals)); document.getElementById('new-goal').value = ''; renderGoals(); }
 function toggleGoal(index) { goals[index].done = !goals[index].done; localStorage.setItem('ashmita_goals', JSON.stringify(goals)); renderGoals(); if(goals[index].done) showCutePopup(); }
 function deleteGoal(index) { goals.splice(index, 1); localStorage.setItem('ashmita_goals', JSON.stringify(goals)); renderGoals(); }
+
+// CUTE POPUP LOGIC
 function showCutePopup() {
-    const popups = ['🐶 Good job cutie!', '🐱 So proud of you!', '🐾 Yayyy baby!', '💖 You did it sweetie!', '✨ Look at you go!'];
+    // PERSONALIZED REWARDS
+    const popups = [
+        'Good girllll!!!! 🐶', 
+        'Merii pyariii bachi ne karliyaaa! 🥺💖', 
+        'Yayyyy cutu bachaaaa! 🐾', 
+        'You did it baunitaa! ✨', 
+        'Look at you goooo! 💅'
+    ];
     const popupEl = document.getElementById('cute-popup');
     popupEl.innerText = popups[Math.floor(Math.random() * popups.length)];
     popupEl.classList.remove('hidden'); popupEl.style.animation = 'none'; void popupEl.offsetWidth; popupEl.style.animation = 'floatUp 2.5s ease forwards';
@@ -177,13 +189,12 @@ function startCountdown() {
     }, 1000);
 }
 
-// OPEN WHEN LETTERS
+// OPEN WHEN LETTERS (KEPT ORIGINAL AS REQUESTED)
 function openLetter(type) {
     const modal = document.getElementById('letter-modal');
     const title = document.getElementById('letter-title');
     const body = document.getElementById('letter-body');
     
-    // CUSTOM MESSAGES - EDIT THESE!
     if (type === 'miss') {
         title.innerText = "When you miss me... 🥺";
         body.innerText = "Remember that I am just one call away. Close your eyes and imagine I'm holding your hand. This distance is temporary, but what we have is forever. I love you more than miles can ever separate us.";
