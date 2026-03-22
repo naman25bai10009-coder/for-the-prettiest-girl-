@@ -215,3 +215,20 @@ function openLetter(type) {
 function closeLetter() {
     document.getElementById('letter-modal').classList.add('hidden');
 }
+// --- MUSIC PLAYER LOGIC ---
+function toggleMusic() {
+    const music = document.getElementById('bg-music');
+    const btn = document.getElementById('music-toggle');
+    
+    if (music.paused) {
+        music.play();
+        btn.innerHTML = '⏸️ Pause Song';
+        btn.style.background = 'rgba(255, 117, 140, 0.5)'; // Turns slightly pink when playing
+        btn.style.color = 'white';
+    } else {
+        music.pause();
+        btn.innerHTML = '🎵 Play Our Song';
+        btn.style.background = 'rgba(255, 255, 255, 0.4)';
+        btn.style.color = '#333';
+    }
+}
